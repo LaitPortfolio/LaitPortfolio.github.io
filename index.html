@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lait | Luau Scripter Portfolio</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;700&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Tailwind Config for Custom Colors/Fonts -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        dark: '#050505',
+                        accent: '#00ffcc',
+                        accentDim: 'rgba(0, 255, 204, 0.2)',
+                        surface: '#111111',
+                    },
+                    fontFamily: {
+                        tech: ['Orbitron', 'sans-serif'],
+                        code: ['JetBrains Mono', 'monospace'],
+                    },
+                    backgroundImage: {
+                        'grid-pattern': "linear-gradient(to right, #1f2937 1px, transparent 1px), linear-gradient(to bottom, #1f2937 1px, transparent 1px)",
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Custom Styles & Animations */
+        body {
+            background-color: #050505;
+            color: #e5e7eb;
+            overflow-x: hidden;
+        }
+
+        .bg-grid {
+            background-size: 40px 40px;
+            background-image: 
+                linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+        }
+
+        /* Neon Glow Effect */
+        .glow-text {
+            text-shadow: 0 0 10px rgba(0, 255, 204, 0.5), 0 0 20px rgba(0, 255, 204, 0.3);
+        }
+        
+        .glow-border {
+            box-shadow: 0 0 15px rgba(0, 255, 204, 0.2);
+            border: 1px solid rgba(0, 255, 204, 0.5);
+        }
+
+        /* Glitch Animation */
+        .glitch {
+            position: relative;
+            display: inline-block;
+        }
+        .glitch::before, .glitch::after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.8;
+        }
+        .glitch::before {
+            left: 2px;
+            text-shadow: -1px 0 red;
+            animation: glitch-anim-1 2s infinite linear alternate-reverse;
+        }
+        .glitch::after {
+            left: -2px;
+            text-shadow: -1px 0 blue;
+            animation: glitch-anim-2 3s infinite linear alternate-reverse;
+        }
+
+        @keyframes glitch-anim-1 {
+            0% { clip-path: inset(20% 0 80% 0); }
+            20% { clip-path: inset(60% 0 10% 0); }
+            40% { clip-path: inset(40% 0 50% 0); }
+            60% { clip-path: inset(80% 0 5% 0); }
+            80% { clip-path: inset(10% 0 70% 0); }
+            100% { clip-path: inset(30% 0 20% 0); }
+        }
+        @keyframes glitch-anim-2 {
+            0% { clip-path: inset(10% 0 60% 0); }
+            20% { clip-path: inset(80% 0 5% 0); }
+            40% { clip-path: inset(30% 0 20% 0); }
+            60% { clip-path: inset(70% 0 10% 0); }
+            80% { clip-path: inset(20% 0 50% 0); }
+            100% { clip-path: inset(50% 0 30% 0); }
+        }
+
+        /* Fade in on scroll classes */
+        .fade-up {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+        .fade-up.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #050505;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #00ffcc;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #00ccaa;
+        }
+    </style>
+</head>
+<body class="bg-dark font-code antialiased relative">
+    
+    <!-- Background Grid -->
+    <div class="fixed inset-0 bg-grid z-[-1] opacity-50"></div>
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 bg-dark/80 backdrop-blur-md border-b border-white/10">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex-shrink-0">
+                    <span class="font-tech text-xl font-bold text-accent tracking-widest">&lt;LAIT /&gt;</span>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-8">
+                        <a href="#home" class="hover:text-accent transition-colors px-3 py-2 rounded-md text-sm font-medium">//.INIT</a>
+                        <a href="#about" class="hover:text-accent transition-colors px-3 py-2 rounded-md text-sm font-medium">//.ABOUT</a>
+                        <a href="#portfolio" class="hover:text-accent transition-colors px-3 py-2 rounded-md text-sm font-medium">//.WORK</a>
+                        <a href="#contact" class="border border-accent text-accent hover:bg-accent hover:text-dark transition-all px-4 py-2 rounded-sm text-sm font-bold">CONNECT</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="min-h-screen flex items-center justify-center relative pt-16">
+        <!-- Abstract glowing orb -->
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-accent rounded-full filter blur-[150px] opacity-20 z-0 animate-pulse"></div>
+
+        <div class="text-center z-10 px-4 max-w-4xl">
+            <p class="text-accent mb-4 font-tech tracking-widest uppercase text-sm">System Online _</p>
+            <h1 class="text-5xl md:text-7xl font-tech font-black mb-6 text-white tracking-tighter">
+                ROBLOX <span class="text-accent glitch" data-text="LUAU">LUAU</span><br> ENGINEER
+            </h1>
+            <p class="text-gray-400 text-lg md:text-xl mb-10 max-w-2xl mx-auto font-code">
+                I translate complex logic into seamless Roblox experiences. 
+                Optimized code, scalable systems, and innovative gameplay mechanics.
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <a href="#portfolio" class="bg-accent text-dark px-8 py-3 rounded-sm font-bold font-tech hover:shadow-[0_0_20px_rgba(0,255,204,0.6)] transition-all duration-300 transform hover:-translate-y-1">
+                    EXECUTE_WORK()
+                </a>
+                <a href="#about" class="border border-gray-600 hover:border-accent text-gray-300 hover:text-accent px-8 py-3 rounded-sm font-bold font-tech transition-all duration-300">
+                    READ_DOCS()
+                </a>
+            </div>
+        </div>
+
+        <!-- Scroll Indicator -->
+        <div class="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center animate-bounce">
+            <span class="text-xs text-gray-500 mb-2 font-tech">SCROLL</span>
+            <i class="fa-solid fa-chevron-down text-accent"></i>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="py-24 relative border-t border-white/5">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row gap-12 items-center">
+                
+                <!-- Terminal UI Info -->
+                <div class="w-full md:w-1/2 fade-up">
+                    <div class="bg-surface rounded-md border border-white/10 overflow-hidden shadow-2xl">
+                        <div class="bg-gray-800 px-4 py-2 flex items-center gap-2 border-b border-white/10">
+                            <div class="w-3 h-3 rounded-full bg-red-500"></div>
+                            <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+                            <div class="w-3 h-3 rounded-full bg-green-500"></div>
+                            <span class="ml-2 text-xs text-gray-400 font-tech">lait_profile.lua</span>
+                        </div>
+                        <div class="p-6 font-code text-sm text-gray-300 leading-relaxed">
+                            <p><span class="text-purple-400">local</span> <span class="text-blue-400">Developer</span> = {</p>
+                            <p class="ml-4">Name = <span class="text-green-400">"Lait"</span>,</p>
+                            <p class="ml-4">Age = <span class="text-orange-400">17</span>,</p>
+                            <p class="ml-4">Role = <span class="text-green-400">"Scripter / Programmer"</span>,</p>
+                            <p class="ml-4">Experience_Years = <span class="text-orange-400">4</span>,</p>
+                            <p class="ml-4">Language = <span class="text-green-400">"Luau"</span>,</p>
+                            <p class="ml-4">Status = <span class="text-green-400">"Available for Hire"</span></p>
+                            <p>}</p>
+                            <br>
+                            <p><span class="text-purple-400">function</span> <span class="text-blue-400">Developer</span>:<span class="text-yellow-200">GetAvailability</span>()</p>
+                            <p class="ml-4"><span class="text-purple-400">if</span> System.Season == <span class="text-green-400">"School"</span> <span class="text-purple-400">then</span></p>
+                            <p class="ml-8"><span class="text-purple-400">return</span> <span class="text-green-400">"12+ Hours / Week"</span></p>
+                            <p class="ml-4"><span class="text-purple-400">elseif</span> System.Season == <span class="text-green-400">"Summer"</span> <span class="text-purple-400">then</span></p>
+                            <p class="ml-8"><span class="text-purple-400">return</span> <span class="text-green-400">"Maximum Output Capacity"</span></p>
+                            <p class="ml-4"><span class="text-purple-400">end</span></p>
+                            <p><span class="text-purple-400">end</span></p>
+                            <br>
+                            <p class="animate-pulse">></p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Text Description -->
+                <div class="w-full md:w-1/2 fade-up">
+                    <h2 class="text-3xl md:text-4xl font-tech font-bold mb-6"><span class="text-accent">01.</span> THE ARCHITECT</h2>
+                    <p class="text-gray-400 mb-6">
+                        I am Lait, a 17-year-old Italian Luau developer with 4 years of deep-dive experience in the Roblox engine. I don't just write scripts; I architect robust, optimized systems designed to scale.
+                    </p>
+                    <p class="text-gray-400 mb-8">
+                        Whether it's complex datastores, fluid combat systems, or intricate UI frameworks, I deliver high-performance code. My availability is highly adaptable, offering reliable part-time dedication during the academic year and full-throttle commitment during the summer months.
+                    </p>
+                    
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="border border-white/10 p-4 rounded-sm bg-surface/50 hover:border-accent/50 transition-colors">
+                            <i class="fa-solid fa-code text-accent text-2xl mb-2"></i>
+                            <h3 class="font-bold text-white">Core Luau</h3>
+                            <p class="text-xs text-gray-500 mt-1">Advanced OOP, Metatables, Modules</p>
+                        </div>
+                        <div class="border border-white/10 p-4 rounded-sm bg-surface/50 hover:border-accent/50 transition-colors">
+                            <i class="fa-solid fa-network-wired text-accent text-2xl mb-2"></i>
+                            <h3 class="font-bold text-white">Client-Server</h3>
+                            <p class="text-xs text-gray-500 mt-1">Secure Networking, Replication</p>
+                        </div>
+                        <div class="border border-white/10 p-4 rounded-sm bg-surface/50 hover:border-accent/50 transition-colors">
+                            <i class="fa-solid fa-database text-accent text-2xl mb-2"></i>
+                            <h3 class="font-bold text-white">Data Mgmt</h3>
+                            <p class="text-xs text-gray-500 mt-1">ProfileService, MemoryStore</p>
+                        </div>
+                        <div class="border border-white/10 p-4 rounded-sm bg-surface/50 hover:border-accent/50 transition-colors">
+                            <i class="fa-solid fa-stopwatch text-accent text-2xl mb-2"></i>
+                            <h3 class="font-bold text-white">Optimization</h3>
+                            <p class="text-xs text-gray-500 mt-1">Memory Leaks, Task Scheduler</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Portfolio Section -->
+    <section id="portfolio" class="py-24 relative border-t border-white/5 bg-surface/30">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16 fade-up">
+                <h2 class="text-3xl md:text-4xl font-tech font-bold mb-4"><span class="text-accent">02.</span> LOG_FILES</h2>
+                <p class="text-gray-400 font-code">A visual record of past executions and systems developed. Click to expand.</p>
+            </div>
+
+            <!-- Grid container for projects -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                
+                <!-- Project Item: Combat System -->
+                <div class="group relative rounded-md overflow-hidden bg-surface border border-white/10 glow-border fade-up cursor-pointer" onclick="openModal('Video/combatSystem.mp4')">
+                    <div class="aspect-video bg-gray-800 relative overflow-hidden flex items-center justify-center">
+                        <video autoplay loop muted playsinline class="w-full h-full object-cover">
+                            <source src="Video/combatSystem.mp4" type="video/mp4">
+                        </video>
+                        <div class="absolute inset-0 bg-dark/90 flex flex-col justify-center items-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 p-6 text-center z-20 pointer-events-none">
+                            <h3 class="text-accent font-tech font-bold text-xl mb-2">Advanced Combat System</h3>
+                            <p class="text-sm text-gray-300 font-code">Hitboxes, State Machines, VFX Syncing.</p>
+                            <p class="text-xs text-accent mt-4 animate-pulse">Click to View</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project Item: Inventory UI -->
+                <div class="group relative rounded-md overflow-hidden bg-surface border border-white/10 glow-border fade-up cursor-pointer" onclick="openModal('Video/inventoryUI.mp4')" style="transition-delay: 100ms;">
+                    <div class="aspect-video bg-gray-800 relative overflow-hidden flex items-center justify-center">
+                        <video autoplay loop muted playsinline class="w-full h-full object-cover">
+                            <source src="Video/inventoryUI.mp4" type="video/mp4">
+                        </video>
+                        <div class="absolute inset-0 bg-dark/90 flex flex-col justify-center items-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 p-6 text-center z-20 pointer-events-none">
+                            <h3 class="text-accent font-tech font-bold text-xl mb-2">Custom Inventory UI</h3>
+                            <p class="text-sm text-gray-300 font-code">Drag & Drop, Data serialization, UI layout structuring.</p>
+                            <p class="text-xs text-accent mt-4 animate-pulse">Click to View</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project Item: Pet Hatching -->
+                <div class="group relative rounded-md overflow-hidden bg-surface border border-white/10 glow-border fade-up cursor-pointer" onclick="openModal('Video/petHatchingSystem.mp4')" style="transition-delay: 200ms;">
+                    <div class="aspect-video bg-gray-800 relative overflow-hidden flex items-center justify-center">
+                        <video autoplay loop muted playsinline class="w-full h-full object-cover">
+                            <source src="Video/petHatchingSystem.mp4" type="video/mp4">
+                        </video>
+                        <div class="absolute inset-0 bg-dark/90 flex flex-col justify-center items-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 p-6 text-center z-20 pointer-events-none">
+                            <h3 class="text-accent font-tech font-bold text-xl mb-2">Pet Hatching System</h3>
+                            <p class="text-sm text-gray-300 font-code">Follow mechanics, hatching animations, modifiers.</p>
+                            <p class="text-xs text-accent mt-4 animate-pulse">Click to View</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project Item: Basketball Shooting -->
+                <div class="group relative rounded-md overflow-hidden bg-surface border border-white/10 glow-border fade-up cursor-pointer" onclick="openModal('Video/basketballShooting.mp4')">
+                    <div class="aspect-video bg-gray-800 relative overflow-hidden flex items-center justify-center">
+                        <video autoplay loop muted playsinline class="w-full h-full object-cover">
+                            <source src="Video/basketballShooting.mp4" type="video/mp4">
+                        </video>
+                        <div class="absolute inset-0 bg-dark/90 flex flex-col justify-center items-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 p-6 text-center z-20 pointer-events-none">
+                            <h3 class="text-accent font-tech font-bold text-xl mb-2">Basketball Physics</h3>
+                            <p class="text-sm text-gray-300 font-code">Trajectory calculations, physics implementation, state management.</p>
+                            <p class="text-xs text-accent mt-4 animate-pulse">Click to View</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Project Item: Dialogue System -->
+                <div class="group relative rounded-md overflow-hidden bg-surface border border-white/10 glow-border fade-up cursor-pointer" onclick="openModal('Video/dialogueSystem.mp4')" style="transition-delay: 100ms;">
+                    <div class="aspect-video bg-gray-800 relative overflow-hidden flex items-center justify-center">
+                        <video autoplay loop muted playsinline class="w-full h-full object-cover">
+                            <source src="Video/dialogueSystem.mp4" type="video/mp4">
+                        </video>
+                        <div class="absolute inset-0 bg-dark/90 flex flex-col justify-center items-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 p-6 text-center z-20 pointer-events-none">
+                            <h3 class="text-accent font-tech font-bold text-xl mb-2">Dialogue System</h3>
+                            <p class="text-sm text-gray-300 font-code">Branching paths, typewriting effects, NPC interactions.</p>
+                            <p class="text-xs text-accent mt-4 animate-pulse">Click to View</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project Item: Directional Movement -->
+                <div class="group relative rounded-md overflow-hidden bg-surface border border-white/10 glow-border fade-up cursor-pointer" onclick="openModal('Video/directionalMovement.mp4')" style="transition-delay: 200ms;">
+                    <div class="aspect-video bg-gray-800 relative overflow-hidden flex items-center justify-center">
+                        <video autoplay loop muted playsinline class="w-full h-full object-cover">
+                            <source src="Video/directionalMovement.mp4" type="video/mp4">
+                        </video>
+                        <div class="absolute inset-0 bg-dark/90 flex flex-col justify-center items-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 p-6 text-center z-20 pointer-events-none">
+                            <h3 class="text-accent font-tech font-bold text-xl mb-2">Directional Movement</h3>
+                            <p class="text-sm text-gray-300 font-code">Custom character controllers, animation blending.</p>
+                            <p class="text-xs text-accent mt-4 animate-pulse">Click to View</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Project Item: Loading Screen -->
+                <div class="group relative rounded-md overflow-hidden bg-surface border border-white/10 glow-border fade-up cursor-pointer" onclick="openModal('Video/loadingScreen.mp4')">
+                    <div class="aspect-video bg-gray-800 relative overflow-hidden flex items-center justify-center">
+                        <video autoplay loop muted playsinline class="w-full h-full object-cover">
+                            <source src="Video/loadingScreen.mp4" type="video/mp4">
+                        </video>
+                        <div class="absolute inset-0 bg-dark/90 flex flex-col justify-center items-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 p-6 text-center z-20 pointer-events-none">
+                            <h3 class="text-accent font-tech font-bold text-xl mb-2">Custom Loading Screen</h3>
+                            <p class="text-sm text-gray-300 font-code">Asset preloading, smooth transitions, dynamic UI.</p>
+                            <p class="text-xs text-accent mt-4 animate-pulse">Click to View</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Project Item: Skill Test -->
+                <div class="group relative rounded-md overflow-hidden bg-surface border border-white/10 glow-border fade-up cursor-pointer" onclick="openModal('Video/skillTest.mp4')" style="transition-delay: 100ms;">
+                    <div class="aspect-video bg-gray-800 relative overflow-hidden flex items-center justify-center">
+                        <video autoplay loop muted playsinline class="w-full h-full object-cover">
+                            <source src="Video/skillTest.mp4" type="video/mp4">
+                        </video>
+                        <div class="absolute inset-0 bg-dark/90 flex flex-col justify-center items-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 p-6 text-center z-20 pointer-events-none">
+                            <h3 class="text-accent font-tech font-bold text-xl mb-2">Skill System Test</h3>
+                            <p class="text-sm text-gray-300 font-code">Ability scripting, cooldown management, visual feedback.</p>
+                            <p class="text-xs text-accent mt-4 animate-pulse">Click to View</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Empty slot to show how to add more -->
+                <div class="group relative rounded-md overflow-hidden bg-surface border border-dashed border-gray-600 hover:border-accent transition-colors fade-up flex items-center justify-center cursor-default" style="min-height: 200px; transition-delay: 200ms;">
+                    <div class="text-center p-6">
+                        <i class="fa-solid fa-plus text-2xl text-gray-500 group-hover:text-accent mb-2 transition-colors"></i>
+                        <p class="text-gray-500 font-code text-sm group-hover:text-gray-300 transition-colors">Awaiting New Assignment</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-24 relative border-t border-white/5">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <div class="fade-up">
+                <h2 class="text-3xl md:text-5xl font-tech font-bold mb-6">ESTABLISH <span class="text-accent">CONNECTION</span></h2>
+                <p class="text-gray-400 font-code mb-10 max-w-2xl mx-auto">
+                    Currently seeking new projects and teams to collaborate with. If you need a reliable scripter to bring your game logic to life, my inbox is open.
+                </p>
+                
+                <div class="flex flex-col sm:flex-row justify-center gap-6 mb-12">
+                    <!-- Replace with your actual links/handles -->
+                    <a href="https://www.discord.com/users/729598752788054068/" target="_blank" class="flex items-center justify-center gap-3 bg-surface border border-white/10 hover:border-accent px-6 py-4 rounded-sm transition-all hover:-translate-y-1 group">
+                        <i class="fa-brands fa-discord text-2xl text-gray-400 group-hover:text-[#5865F2] transition-colors"></i>
+                        <span class="font-code text-gray-300 group-hover:text-white transition-colors">lait_u_boss</span>
+                    </a>
+
+                    <a href="https://www.roblox.com/users/1320244376/profile/" target="_blank" class="flex items-center justify-center gap-3 bg-surface border border-white/10 hover:border-accent px-6 py-4 rounded-sm transition-all hover:-translate-y-1 group">
+                        <svg class="w-6 h-6 text-gray-400 group-hover:text-white transition-colors fill-current" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M11.968 0C5.356 0 0 5.344 0 11.954c0 3.738 1.942 6.64 4.544 8.793a12.062 12.062 0 005.105 2.502.822.822 0 00.339-.142.756.756 0 00.28-.532c.007-.066.012-.34.015-.758-2.617.433-3.32-1.074-3.528-1.748-.125-.407-.582-1.09-1.002-1.393-.243-.173-.593-.418-.016-.432.551-.013.987.483 1.15 1.761.424.622 1.348.653 1.924.529a2.383 2.383 0 01.758-1.55c-2.428-.276-4.992-1.213-4.992-5.412 0-1.196.427-2.175 1.127-2.943-.112-.275-.488-1.391.108-2.898 0 0 .918-.293 3.003 1.12A10.377 10.377 0 0112 6.446c1.07.004 2.152.145 3.125.424 2.083-1.412 3-1.12 3-1.12.597 1.507.22 2.623.11 2.898.703.768 1.125 1.747 1.125 2.943 0 4.21-2.57 5.132-5.008 5.404.382.33.722.977.722 1.967 0 1.419-.013 2.563-.013 2.912 0 .227.095.495.346.544a12.064 12.064 0 005.111-2.495c2.61-2.156 4.56-5.066 4.56-8.814C23.957 5.344 18.59 0 11.968 0z"/></svg>
+                        <span class="font-code text-gray-300 group-hover:text-white transition-colors">Roblox Profile</span>
+                    </a>
+                </div>
+
+                <a href="mailto:light78905@gmail.com" class="inline-block bg-transparent border-2 border-accent text-accent hover:bg-accent hover:text-dark px-10 py-4 rounded-sm font-bold font-tech text-lg transition-all duration-300 glow-border hover:shadow-[0_0_30px_rgba(0,255,204,0.6)]">
+                    SEND_TRANSMISSION()
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="border-t border-white/5 py-8 text-center bg-dark">
+        <p class="font-code text-gray-600 text-sm">
+            &copy; 2026 Lait. All systems operational.
+        </p>
+    </footer>
+
+    <!-- Video Modal -->
+    <div id="videoModal" class="fixed inset-0 z-[100] hidden items-center justify-center bg-black/90 backdrop-blur-sm opacity-0 transition-opacity duration-300">
+        <button onclick="closeModal()" class="absolute top-6 right-6 text-white hover:text-accent text-4xl transition-colors z-50">
+            <i class="fa-solid fa-times"></i>
+        </button>
+        <div class="relative w-full max-w-5xl px-4 transform scale-95 transition-transform duration-300" id="modalContent">
+            <video id="modalVideo" controls autoplay class="w-full h-auto rounded-md border border-white/20 shadow-[0_0_30px_rgba(0,255,204,0.2)]">
+                <source src="" type="video/mp4">
+            </video>
+        </div>
+    </div>
+
+    <!-- Scroll Animation Script & Modal Logic -->
+    <script>
+        // Simple Intersection Observer for scroll fade-up animations
+        document.addEventListener("DOMContentLoaded", function() {
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.1
+            };
+
+            const observer = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                        observer.unobserve(entry.target); // Only animate once
+                    }
+                });
+            }, observerOptions);
+
+            const fadeElements = document.querySelectorAll('.fade-up');
+            fadeElements.forEach(el => observer.observe(el));
+        });
+
+        // Video Modal Logic
+        const modal = document.getElementById('videoModal');
+        const modalVideo = document.getElementById('modalVideo');
+        const modalContent = document.getElementById('modalContent');
+
+        function openModal(videoSrc) {
+            modal.classList.remove('hidden');
+            modal.classList.add('flex'); // Switch to flex layout for centering
+            
+            // Short delay to allow display property change to register before animating opacity/transform
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+                modalContent.classList.remove('scale-95');
+                modalContent.classList.add('scale-100');
+            }, 10);
+            
+            modalVideo.src = videoSrc;
+            modalVideo.play();
+        }
+
+        function closeModal() {
+            modal.classList.add('opacity-0');
+            modalContent.classList.remove('scale-100');
+            modalContent.classList.add('scale-95');
+            
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+                modalVideo.pause();
+                modalVideo.src = ""; // Clear src so it doesn't keep playing in background
+            }, 300); // Duration matches tailwind duration-300
+        }
+
+        // Close modal when clicking outside the video player
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                closeModal();
+            }
+        });
+
+        // Close modal on escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && !modal.classList.contains('hidden')) {
+                closeModal();
+            }
+        });
+    </script>
+</body>
+</html>
